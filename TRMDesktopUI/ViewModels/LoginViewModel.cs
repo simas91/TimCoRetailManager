@@ -41,6 +41,36 @@ namespace TRMDesktopUI.ViewModels
 
             }
         }
+		
+		public bool IsErrorVisible
+		{
+			get
+			{ 
+				bool output = false;
+
+				if (ErrorMessage?.Length > 0)
+				{
+					output = true;
+				}
+
+				return output; 
+			}
+		}
+        
+		private string _errorMessage;
+
+		public string ErrorMessage
+        {
+			get { return _errorMessage; }
+			set 
+			{
+                _errorMessage = value;
+                NotifyOfPropertyChange(() => IsErrorVisible);
+                NotifyOfPropertyChange(() => ErrorMessage);
+			}
+		}
+
+
 
 		// based on LogIn , if it was Login this should be CanLogin -- caliburn micro
 		public bool CanLogIn
@@ -60,14 +90,14 @@ namespace TRMDesktopUI.ViewModels
 			
 		public async Task LogIn()
 		{
-			try
+            try
 			{
-				var result = await _apiHelper.Authenticate(UserName, Password);
+                ErrorMessage = "";
+                var result = await _apiHelper.Authenticate(UserName, Password);
 			}
 			catch (Exception ex)
 			{
-
-                await Console.Out.WriteLineAsync(ex.Message);
+				ErrorMessage = ex.Message;
             }
         }
 	}
