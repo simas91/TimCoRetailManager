@@ -12,7 +12,8 @@ namespace TRMDataManager.Controllers
     [Authorize]
     public class UserController : ApiController
     {
-        public List<UserModel> GetById()
+        [HttpGet]
+        public UserModel GetById()
         {
             // gets userId from the user who is loged in
             // passing userId by method is security issue
@@ -20,7 +21,7 @@ namespace TRMDataManager.Controllers
 
             UserData data = new UserData();
 
-            return data.GetUserById(userId);
+            return data.GetUserById(userId).First();
         }
     }
 }
