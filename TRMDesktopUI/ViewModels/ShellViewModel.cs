@@ -15,20 +15,17 @@ namespace TRMDesktopUI.ViewModels
     {
         private IEventAggregator _events;
         private SalesViewModel _salesVM;
-        private SimpleContainer _container;
 
         // SimpleContainer lets us request new instances
-        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM, 
-            SimpleContainer container)
+        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM)
         {
             _events = events;
             _salesVM = salesVM;
-            _container = container;
 
             _events.SubscribeOnUIThread(this);
 
             // makes LoginViewModel not a singleton and gives new instance on request
-            ActivateItemAsync(_container.GetInstance<LoginViewModel>());
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
 
 
