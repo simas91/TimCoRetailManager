@@ -49,7 +49,7 @@ namespace TRMDesktopUI.ViewModels
 
         public void LogOut()
         {
-            _user.LogOffUser();
+            _user.ResetUserModel();
             _apiHelper.LogOffUser();
             ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
