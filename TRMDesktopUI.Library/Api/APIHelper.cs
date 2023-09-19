@@ -96,5 +96,11 @@ namespace TRMDesktopUI.Library.Api
                 }
             }
         }
+
+        public void LogOffUser()
+        {
+            // clearing token from api
+            _apiClient.DefaultRequestHeaders.Clear();
+        }
     }
 }
