@@ -52,7 +52,8 @@ namespace TRMDesktopUI
 
             _container.Instance(_container)
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
-                .PerRequest<ISaleEndPoint, SaleEndPoint>();
+                .PerRequest<ISaleEndPoint, SaleEndPoint>()
+                .PerRequest<IUserEndpoint, UserEndpoint>();
             
 
             // brings extra stuff from caliburn.micro
