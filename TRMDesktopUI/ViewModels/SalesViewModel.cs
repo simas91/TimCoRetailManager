@@ -4,9 +4,11 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
@@ -20,19 +22,48 @@ namespace TRMDesktopUI.ViewModels
         IConfigHelper _configHelper;
         ISaleEndPoint _saleEndPoint;
         IMapper _mapper;
+        private readonly StatusInfoViewModel _status;
+        private readonly IWindowManager _window;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint, IMapper mapper)
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint, IMapper mapper, StatusInfoViewModel status, IWindowManager window)
         {
             _productEndpoint = productEndpoint;
             _configHelper = configHelper;
             _saleEndPoint = saleEndPoint;
             _mapper = mapper;
+            _status = status;
+            _window = window;
         }
 
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-            await LoadProducts();
+
+            try
+            {
+                await LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                // dynamic list of seeting, passing them to pop up below
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+
+                if (ex.Message == "Unauthorized")
+                {
+                    _status.UpdateMessage("Unauthorized Access", "You do not have permission to interact with the Sales Form.");
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+                else
+                {
+                    _status.UpdateMessage("Fatal Exception", ex.Message);
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+
+                await TryCloseAsync();
+            }
         }
 
         private async Task LoadProducts()
