@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TRMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess
+    internal class SqlDataAccess : IDisposable
     {
         public string GetConnectionString(string name)
         {
@@ -31,7 +31,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
             }
         }
 
-        public void SaveData<T, U>(string storedProcedure, T parameters, string connectionStringName)
+        public void SaveData<T>(string storedProcedure, T parameters, string connectionStringName)
         {
             string connectionString = GetConnectionString(connectionStringName);
 
@@ -43,16 +43,56 @@ namespace TRMDataManager.Library.Internal.DataAccess
             }
         }
 
-        public void SaveData<T>(string storedProcedure, T parameters, string connectionStringName)
-        {
-            string connectionString = GetConnectionString(connectionStringName);
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Execute(storedProcedure,
-                                   parameters,
-                                   commandType: CommandType.StoredProcedure);
-            }
+        // open connection/start transaction method
+        // load using the transaction
+        // save using the transaction
+        // close connection/stop transaction method
+        // dispose
+        private IDbConnection _connection;
+        private IDbTransaction _transaction;
+        public void StartTransaction(string connectionStringName)
+        {
+            // starts the connection
+            string connectionString = GetConnectionString(connectionStringName);
+            _connection = new SqlConnection(connectionString);
+            _connection.Open();
+            _transaction = _connection.BeginTransaction();
+        }
+
+        public void SaveDataInTransaction<T>(string storedProcedure, T parameters)
+        {
+                _connection.Execute(storedProcedure,
+                                    parameters,
+                                    commandType: CommandType.StoredProcedure,
+                                    transaction: _transaction);
+        }
+
+        public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
+        {
+                List<T> rows = _connection.Query<T>(storedProcedure,
+                                                    parameters,
+                                                    commandType: CommandType.StoredProcedure,
+                                                    transaction: _transaction).ToList();
+                return rows;
+        }
+
+        // applies changes to db
+        public void CommitTransacion()
+        {
+            _transaction?.Commit();
+            _connection?.Close();
+        }
+        // erases all the changes made
+        public void RollbackTransacion()
+        {
+            _transaction?.Rollback();
+            _connection?.Close();
+        }
+
+        public void Dispose()
+        {
+            CommitTransacion();
         }
     }
 }
