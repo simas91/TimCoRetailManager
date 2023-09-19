@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using TRMDesktopUI.EventModels;
+using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.ViewModels
 {
@@ -15,12 +16,14 @@ namespace TRMDesktopUI.ViewModels
     {
         private IEventAggregator _events;
         private SalesViewModel _salesVM;
+        private ILoggedInUserModel _user;
 
         // SimpleContainer lets us request new instances
-        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM)
+        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM, ILoggedInUserModel user)
         {
             _events = events;
             _salesVM = salesVM;
+            _user = user;
 
             _events.SubscribeOnUIThread(this);
 
@@ -32,7 +35,35 @@ namespace TRMDesktopUI.ViewModels
         public Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
             ActivateItemAsync(_salesVM);
+            NotifyOfPropertyChange(() => IsLoggedIn);
             return Task.CompletedTask;
+        }
+
+        public void ExitApplication()
+        {
+            TryCloseAsync();
+        }
+
+        public void LogOut()
+        {
+            _user.LogOffUser();
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
+            NotifyOfPropertyChange(() => IsLoggedIn);
+        }
+
+        public bool IsLoggedIn
+        {
+            get
+            {
+                bool output = false;
+
+                if (string.IsNullOrWhiteSpace(_user.Token) == false)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
         }
     }
 }

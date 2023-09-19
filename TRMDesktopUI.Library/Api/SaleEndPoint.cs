@@ -31,22 +31,5 @@ namespace TRMDesktopUI.Library.Api
                 }
             }
         }
-
-        //public async Task<List<ProductModel>> GetAll()
-        //{
-        //    using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/Product"))
-        //    {
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            // gets LoggedInUserModel, once its updated here it is updated everywhere because Singleton
-        //            var result = await response.Content.ReadAsAsync<List<ProductModel>>();
-        //            return result;
-        //        }
-        //        else
-        //        {
-        //            throw new Exception(response.ReasonPhrase);
-        //        }
-        //    }
-        //}
     }
 }
