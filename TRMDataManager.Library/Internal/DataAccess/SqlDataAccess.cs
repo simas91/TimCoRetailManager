@@ -58,6 +58,8 @@ namespace TRMDataManager.Library.Internal.DataAccess
             _connection = new SqlConnection(connectionString);
             _connection.Open();
             _transaction = _connection.BeginTransaction();
+
+            isClosed = false;
         }
 
         public void SaveDataInTransaction<T>(string storedProcedure, T parameters)
@@ -77,22 +79,41 @@ namespace TRMDataManager.Library.Internal.DataAccess
                 return rows;
         }
 
+        private bool isClosed = false;
+
         // applies changes to db
         public void CommitTransacion()
         {
             _transaction?.Commit();
             _connection?.Close();
+
+            isClosed = true;
         }
         // erases all the changes made
         public void RollbackTransacion()
         {
             _transaction?.Rollback();
             _connection?.Close();
+
+            isClosed = true;
         }
 
         public void Dispose()
         {
-            CommitTransacion();
+            if (isClosed == false)
+            {
+                try
+                {
+                    CommitTransacion();
+                }
+                catch
+                {
+                    // TODO log this issue
+                } 
+            }
+
+            _transaction = null;
+            _connection = null;
         }
     }
 }
