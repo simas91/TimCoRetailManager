@@ -25,7 +25,7 @@ namespace TRMApi.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
             //// Creates a role if it does not exist
             //// Good for first time launch, delete after 
