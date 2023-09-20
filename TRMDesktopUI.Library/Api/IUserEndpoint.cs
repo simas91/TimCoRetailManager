@@ -9,5 +9,8 @@ namespace TRMDesktopUI.Library.Api
         IAPIHelper _apiHelper { get; }
 
         Task<List<UserModel>> GetAll();
+        Task<Dictionary<string, string>> GetAllRoles();
+        Task AddUserToRole(string userId, string roleName);
+        Task RemoveUserFromRole(string userId, string roleName);
     }
 }

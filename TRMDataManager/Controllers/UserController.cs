@@ -26,6 +26,8 @@ namespace TRMDataManager.Controllers
             return data.GetUserById(userId).First();
         }
 
+
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/User/Admin/GetAllUsers")]
@@ -58,6 +60,55 @@ namespace TRMDataManager.Controllers
                 }
             }
             return output;
+        }
+
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("api/User/Admin/GetAllRoles")]
+        public Dictionary<string, string> GetAllRoles()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var roles = context.Roles.ToDictionary(x => x.Id, x => x.Name);
+
+                return roles;
+            }
+        }
+
+
+        // passing UserRolePairModel to not expose userId
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("api/User/Admin/AddRole")]
+        public void AddARole(UserRolePairModel pairing)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                // entity framework method
+                userManager.AddToRole(pairing.UserId, pairing.RoleName);
+            }
+        }
+
+
+        // passing UserRolePairModel to not expose userId
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("api/User/Admin/RemoveRole")]
+        public void RemoveARole(UserRolePairModel pairing)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                // entity framework method
+                userManager.RemoveFromRole(pairing.UserId, pairing.RoleName);
+            }
         }
     }
 }
