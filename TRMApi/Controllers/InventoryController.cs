@@ -8,7 +8,7 @@ namespace TRMApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class InventoryController : ControllerBase
     {
         // this is dependency injection
@@ -19,14 +19,14 @@ namespace TRMApi.Controllers
             _inventoryData = inventoryData;
         }
 
-        //[Authorize(Roles = "Manager,Admin")]
+        [Authorize(Roles = "Manager,Admin")]
         [HttpGet]
         public List<InvertoryModel> Get()
         {
             return _inventoryData.GetInventory();
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public void Post(InvertoryModel item)
         {

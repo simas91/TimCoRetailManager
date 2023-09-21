@@ -13,7 +13,7 @@ namespace TRMApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -40,7 +40,7 @@ namespace TRMApi.Controllers
             return _userData.GetUserById(userId).First();
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("Admin/GetAllUsers")]
         public List<ApplicationUserModel> GetAllUsers()
@@ -71,7 +71,7 @@ namespace TRMApi.Controllers
             return output;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("Admin/GetAllRoles")]
         public Dictionary<string, string> GetAllRoles()
@@ -82,7 +82,7 @@ namespace TRMApi.Controllers
         }
 
         // passing UserRolePairModel to not expose userId
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/AddRole")]
         public async Task AddARole(UserRolePairModel pairing)
@@ -92,7 +92,7 @@ namespace TRMApi.Controllers
         }
 
         // passing UserRolePairModel to not expose userId
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/RemoveRole")]
         public async Task RemoveARole(UserRolePairModel pairing)

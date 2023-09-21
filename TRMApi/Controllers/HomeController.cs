@@ -26,7 +26,7 @@ namespace TRMApi.Controllers
             return View();
         }
 
-        //[Authorize]
+        [Authorize]
         public IActionResult Privacy()
         {
             //// Creates a role if it does not exist

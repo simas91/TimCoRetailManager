@@ -8,7 +8,7 @@ namespace TRMApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Cashier")]
+    [Authorize(Roles = "Cashier")]
     public class ProductController : ControllerBase
     {
         private readonly IProductData _productData;
