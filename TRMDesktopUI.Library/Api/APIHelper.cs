@@ -75,7 +75,7 @@ namespace TRMDesktopUI.Library.Api
             _apiClient.DefaultRequestHeaders.Clear();
             _apiClient.DefaultRequestHeaders.Accept.Clear();
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token}");
+            _apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             using (HttpResponseMessage response = await _apiClient.GetAsync("/api/User"))
             {

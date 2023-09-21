@@ -26,12 +26,14 @@ namespace TRMApi
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+
             // Personal Services
             // asking for IInventoryData and it creates instance of InventoryData
             builder.Services.AddTransient<IInventoryData, InventoryData>();
             builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
             builder.Services.AddTransient<IProductData, ProductData>();
             builder.Services.AddTransient<ISaleData, SaleData>();
+            builder.Services.AddTransient<IUserData, UserData>();
 
 
             // Authentication
@@ -53,6 +55,8 @@ namespace TRMApi
                     };
                 }
                 );
+
+            builder.Services.AddAuthorization();
 
             // Swagger
             builder.Services.AddSwaggerGen(setup =>

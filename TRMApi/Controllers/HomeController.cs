@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Web.Http;
 using TRMApi.Models;
 
 namespace TRMApi.Controllers
@@ -25,6 +26,7 @@ namespace TRMApi.Controllers
             return View();
         }
 
+        //[Authorize]
         public IActionResult Privacy()
         {
             //// Creates a role if it does not exist

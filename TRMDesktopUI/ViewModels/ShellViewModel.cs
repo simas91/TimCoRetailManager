@@ -39,6 +39,7 @@ namespace TRMDesktopUI.ViewModels
             // gets new SalesViewModel
             await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
+            NotifyOfPropertyChange(() => IsLoggedOut);
         }
 
         public void ExitApplication()
@@ -72,6 +73,14 @@ namespace TRMDesktopUI.ViewModels
                 }
 
                 return output;
+            }
+        }
+
+        public bool IsLoggedOut
+        {
+            get
+            {
+                return !IsLoggedIn;
             }
         }
     }

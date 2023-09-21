@@ -9,7 +9,7 @@ namespace TRMApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SaleController : ControllerBase
     {
         private readonly ISaleData _saleData;
@@ -19,7 +19,7 @@ namespace TRMApi.Controllers
             _saleData = saleData;
         }
 
-        [Authorize(Roles = "Cashier")]
+        //[Authorize(Roles = "Cashier")]
         [HttpPost]
         public void Post(SaleModel sale)
         {
@@ -29,7 +29,7 @@ namespace TRMApi.Controllers
             _saleData.SaveSale(sale, userId);
         }
 
-        [Authorize(Roles = "Admin,Manager")]
+        //[Authorize(Roles = "Admin,Manager")]
         [Route("GetSalesReport")]
         [HttpGet]
         public List<SaleReportModel> GetSalesReport()
