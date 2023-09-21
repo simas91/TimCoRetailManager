@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TRMApi.Data;
+using TRMDataManager.Library.DataAccess;
+using TRMDataManager.Library.Internal.DataAccess;
 
 namespace TRMApi
 {
@@ -23,6 +25,14 @@ namespace TRMApi
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            // Personal Services
+            // asking for IInventoryData and it creates instance of InventoryData
+            builder.Services.AddTransient<IInventoryData, InventoryData>();
+            builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+            builder.Services.AddTransient<IProductData, ProductData>();
+            builder.Services.AddTransient<ISaleData, SaleData>();
+
 
             // Authentication
             builder.Services.AddAuthentication(options =>

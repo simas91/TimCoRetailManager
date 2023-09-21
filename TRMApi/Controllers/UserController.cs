@@ -18,13 +18,13 @@ namespace TRMApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IConfiguration _config;
+        private readonly IUserData _userData;
 
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration config)
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IUserData userData)
         {
             _context = context;
             _userManager = userManager;
-            _config = config;
+            _userData = userData;
         }
 
         [HttpGet]
@@ -36,12 +36,8 @@ namespace TRMApi.Controllers
             // Old way: string userId = RequestContext.Principal.Identity.GetUserId();
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            UserData data = new UserData(_config);
-
-            return data.GetUserById(userId).First();
+            return _userData.GetUserById(userId).First();
         }
-
-
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -71,11 +67,8 @@ namespace TRMApi.Controllers
 
                 output.Add(u);
             }
-
             return output;
         }
-
-
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -87,18 +80,15 @@ namespace TRMApi.Controllers
             return roles;
         }
 
-
         // passing UserRolePairModel to not expose userId
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/AddRole")]
         public async Task AddARole(UserRolePairModel pairing)
         {
-
             var user = await _userManager.FindByIdAsync(pairing.UserId);
             await _userManager.AddToRoleAsync(user, pairing.RoleName);
         }
-
 
         // passing UserRolePairModel to not expose userId
         [Authorize(Roles = "Admin")]
