@@ -69,6 +69,7 @@ namespace TRMApi.Controllers
             }
 
             // generates new token, security algorithms for signing, not encrypting
+            // first commint on Azure DevOps 
             string key = _config.GetValue<string>("Secrets:SecurityKey");
 
             var token = new JwtSecurityToken(
