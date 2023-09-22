@@ -19,13 +19,15 @@ namespace TRMApi.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserData _userData;
+        private readonly ILogger<UserController> _logger;
 
         public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager
-            , IUserData userData)
+            , IUserData userData, ILogger<UserController> logger)
         {
             _context = context;
             _userManager = userManager;
             _userData = userData;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -87,7 +89,16 @@ namespace TRMApi.Controllers
         [Route("Admin/AddRole")]
         public async Task AddARole(UserRolePairModel pairing)
         {
+            //For logging
+            string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _userData.GetUserById(loggedInUserId).First();
+
             var user = await _userManager.FindByIdAsync(pairing.UserId);
+
+            // Don't use string interpolation for logging, user this structure instead.
+            _logger.LogInformation("Admin {Admin} added user {User} to role {Role}", 
+                loggedInUserId, user.Id, pairing.RoleName);
+
             await _userManager.AddToRoleAsync(user, pairing.RoleName);
         }
 
@@ -97,7 +108,16 @@ namespace TRMApi.Controllers
         [Route("Admin/RemoveRole")]
         public async Task RemoveARole(UserRolePairModel pairing)
         {
+            //For logging
+            string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _userData.GetUserById(loggedInUserId).First();
+
             var user = await _userManager.FindByIdAsync(pairing.UserId);
+
+            // Don't use string interpolation for logging, user this structure instead.
+            _logger.LogInformation("Admin {Admin} removed user {User} from role {Role}",
+                loggedInUserId, user.Id, pairing.RoleName);
+
             await _userManager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
     }
