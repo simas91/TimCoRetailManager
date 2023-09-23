@@ -15,6 +15,16 @@ namespace TRMApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // For portal app - Gives permision to other web apps to our api
+            builder.Services.AddCors(policy =>
+            {
+                policy.AddPolicy("OpenCorsPolicy", opt =>
+                    opt.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
+
+
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -85,6 +95,7 @@ namespace TRMApi
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("OpenCorsPolicy");
             app.UseStaticFiles();
 
             app.UseRouting();
