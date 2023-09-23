@@ -18,8 +18,8 @@ namespace TRMDesktopUI.Library.Api
 
         public APIHelper(ILoggedInUserModel loggedInUser)
         {
-            InitializeClient();
             _loggedInUser = loggedInUser;
+            InitializeClient();
         }
 
         private void InitializeClient()
