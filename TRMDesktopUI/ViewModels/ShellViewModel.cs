@@ -53,12 +53,19 @@ namespace TRMDesktopUI.ViewModels
 
         }
 
+        public async Task LogIn()
+        {
+            // Just in case gives new instance of Login View Model
+            await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+        }
+
         public async Task LogOut()
         {
             _user.ResetUserModel();
             _apiHelper.LogOffUser();
             await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
             NotifyOfPropertyChange(() => IsLoggedIn);
+            NotifyOfPropertyChange(() => IsLoggedOut);
         }
 
         public bool IsLoggedIn
