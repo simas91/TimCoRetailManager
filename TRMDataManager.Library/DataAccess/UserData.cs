@@ -22,5 +22,9 @@ namespace TRMDataManager.Library.DataAccess
             var output = _sql.LoadData<UserModel, dynamic>("dbo.spUserLookup", new { Id }, "TRMData");
             return output;
         }
+        public void CreateUser(UserModel user)
+        {
+            _sql.SaveData("dbo.spUser_Insert", new { user.Id, user.FirstName, user.LastName, user.EmailAddress }, "TRMData");
+        }
     }
 }

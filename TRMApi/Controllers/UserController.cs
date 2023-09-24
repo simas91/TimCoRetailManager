@@ -120,5 +120,58 @@ namespace TRMApi.Controllers
 
             await _userManager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
+
+        // REGISTRATION
+        public record UserRegistrationModel(string FirstName,
+                                            string LastName,
+                                            string EmailAddress,
+                                            string Password);
+
+        [HttpPost]
+        [Route("Register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegistrationModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+                if (existingUser is null) 
+                {
+                    // DO NOT put password here
+                    IdentityUser newUser = new()
+                    {
+                        Email = user.EmailAddress,
+                        EmailConfirmed = true,
+                        UserName = user.EmailAddress
+                    };
+
+                    IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+
+                    if (result.Succeeded)
+                    {
+                        existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+
+                        // checks if user creation was success and then creates user in our db using authDB user Id
+                        if (existingUser is null)
+                        {
+                            return BadRequest();
+                        }
+
+                        UserModel u = new()
+                        {
+                            Id = existingUser.Id,
+                            FirstName = user.FirstName, 
+                            LastName = user.LastName,
+                            EmailAddress = user.EmailAddress,
+                        };
+
+                        _userData.CreateUser(u);
+                        return Ok();
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }
