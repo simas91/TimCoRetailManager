@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Portal;
 using Portal.Authentication;
+using TRMDesktopUI.Library.Api;
+using TRMDesktopUI.Library.Models;
 
 namespace Portal
 {
@@ -19,6 +21,13 @@ namespace Portal
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+            // Dependency Injection
+            builder.Services.AddSingleton<IAPIHelper, APIHelper>();
+            builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
+            builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
+            builder.Services.AddTransient<IProductEndpoint, ProductEndpoint>();
+            builder.Services.AddTransient<ISaleEndPoint, SaleEndPoint>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

@@ -7,6 +7,8 @@
 	<ItemGroup>
 	  <PackageReference Include="AutoMapper" Version="12.0.1" />
 	  <PackageReference Include="Caliburn.Micro" Version="4.0.212" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\TRMDesktopUI.Library\TRMDesktopUI.Library.csproj" />
@@ -19,6 +21,9 @@
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Properties\Settings.settings">
 	    <Generator>SettingsSingleFileGenerator</Generator>
 	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
