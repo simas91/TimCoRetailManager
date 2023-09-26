@@ -18,10 +18,10 @@ namespace TRMDesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        IProductEndpoint _productEndpoint;
+        readonly IProductEndpoint _productEndpoint;
         private readonly IConfiguration _config;
-        ISaleEndPoint _saleEndPoint;
-        IMapper _mapper;
+        readonly ISaleEndPoint _saleEndPoint;
+        readonly IMapper _mapper;
         private readonly StatusInfoViewModel _status;
         private readonly IWindowManager _window;
 
@@ -67,7 +67,7 @@ namespace TRMDesktopUI.ViewModels
                     await _window.ShowDialogAsync(_status, null, settings);
                 }
 
-                TryCloseAsync();
+                await TryCloseAsync();
             }
         }
 
@@ -130,7 +130,7 @@ namespace TRMDesktopUI.ViewModels
         }
 
 
-        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
+        private BindingList<CartItemDisplayModel> _cart = new();
 
         public BindingList<CartItemDisplayModel> Cart
         {
@@ -231,7 +231,7 @@ namespace TRMDesktopUI.ViewModels
             }
             else
             {
-                CartItemDisplayModel item = new CartItemDisplayModel
+                CartItemDisplayModel item = new()
                 {
                     Product = SelectedProduct,
                     QuantityInCart = ItemQuantity
@@ -321,7 +321,7 @@ namespace TRMDesktopUI.ViewModels
         public async Task CheckOut()
         {
             // create SaleModel and post to checkout
-            SaleModel sale = new SaleModel();
+            SaleModel sale = new();
 
             foreach (var item in Cart)
             {

@@ -25,7 +25,7 @@ namespace TRMApi.Controllers
         // grant_type is only need for the old system
         [Route("/token")]
         [HttpPost]
-        public async Task<IActionResult> Create(string username, string password, string grant_type)
+        public async Task<IActionResult> Create(string username, string password)
         {
             if (await IsValidUsernameAndPassword(username, password))
             {
@@ -70,7 +70,7 @@ namespace TRMApi.Controllers
 
             // generates new token, security algorithms for signing, not encrypting
             // first commint on Azure DevOps 
-            string key = _config.GetValue<string>("Secrets:SecurityKey");
+            string? key = _config.GetValue<string>("Secrets:SecurityKey");
 
             var token = new JwtSecurityToken(
                 new JwtHeader(

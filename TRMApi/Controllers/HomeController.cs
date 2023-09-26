@@ -1,25 +1,25 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Web.Http;
 using TRMApi.Models;
 
 namespace TRMApi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        //private readonly ILogger<HomeController> _logger;
+        //private readonly RoleManager<IdentityRole> _roleManager;
+        //private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger,
-                              RoleManager<IdentityRole> roleManager,
-                              UserManager<IdentityUser> userManager)
-        {
-            _logger = logger;
-            _roleManager = roleManager;
-            _userManager = userManager;
-        }
+        //public HomeController(ILogger<HomeController> logger,
+        //                      RoleManager<IdentityRole> roleManager,
+        //                      UserManager<IdentityUser> userManager)
+        //{
+        //    _logger = logger;
+        //    _roleManager = roleManager;
+        //    _userManager = userManager;
+        //}
 
         public IActionResult Index()
         {
@@ -29,9 +29,9 @@ namespace TRMApi.Controllers
         [Authorize]
         public IActionResult Privacy()
         {
-            //// Creates a role if it does not exist
-            //// Good for first time launch, delete after 
-            
+            // Creates a role if it does not exist
+            // Good for first time launch, delete after 
+
             //string[] roles = { "Admin", "Manager", "Cashier" };
 
             //foreach (var role in roles)
