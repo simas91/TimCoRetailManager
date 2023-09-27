@@ -15,7 +15,7 @@ namespace TRMDesktopUI.Library.Api
     {
         // One HttpClient for the entire duration of the app
         private HttpClient _apiClient;
-        private ILoggedInUserModel _loggedInUser;
+        private readonly ILoggedInUserModel _loggedInUser;
         private readonly IConfiguration _config;
 
         public APIHelper(ILoggedInUserModel loggedInUser, IConfiguration config)
@@ -31,7 +31,7 @@ namespace TRMDesktopUI.Library.Api
             //string api = ConfigurationManager.AppSettings["api"];
             string api = _config.GetValue<string>("api");
 
-            _apiClient = new HttpClient();
+            _apiClient = new();
             _apiClient.BaseAddress = new Uri(api);
             _apiClient.DefaultRequestHeaders.Accept.Clear();
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -55,18 +55,16 @@ namespace TRMDesktopUI.Library.Api
             });
 
             // passing only relative path, not full url
-            using (HttpResponseMessage response = await _apiClient.PostAsync("/Token", data))
+            using HttpResponseMessage response = await _apiClient.PostAsync("/Token", data);
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    // nuget package for ReadAsAsync microsoft.aspnet.webapi.client
-                    var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
-                    return result;
-                }
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
+                // nuget package for ReadAsAsync microsoft.aspnet.webapi.client
+                var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+                return result;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
 
@@ -82,23 +80,21 @@ namespace TRMDesktopUI.Library.Api
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-            using (HttpResponseMessage response = await _apiClient.GetAsync("/api/User"))
+            using HttpResponseMessage response = await _apiClient.GetAsync("/api/User");
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    // gets LoggedInUserModel, once its updated here it is updated everywhere because Singleton
-                    var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
-                    _loggedInUser.CreatedDate = result.CreatedDate;
-                    _loggedInUser.EmailAddress = result.EmailAddress;
-                    _loggedInUser.FirstName = result.FirstName;
-                    _loggedInUser.Id = result.Id;
-                    _loggedInUser.LastName = result.LastName;
-                    _loggedInUser.Token = token;
-                }
-                else
-                { 
-                    throw new Exception(response.ReasonPhrase);
-                }
+                // gets LoggedInUserModel, once its updated here it is updated everywhere because Singleton
+                var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
+                _loggedInUser.CreatedDate = result.CreatedDate;
+                _loggedInUser.EmailAddress = result.EmailAddress;
+                _loggedInUser.FirstName = result.FirstName;
+                _loggedInUser.Id = result.Id;
+                _loggedInUser.LastName = result.LastName;
+                _loggedInUser.Token = token;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
 

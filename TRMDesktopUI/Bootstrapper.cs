@@ -19,7 +19,7 @@ namespace TRMDesktopUI
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private SimpleContainer _container = new SimpleContainer();
+        private readonly SimpleContainer _container = new();
 
         public Bootstrapper()
         {
@@ -32,7 +32,7 @@ namespace TRMDesktopUI
         }
 
         // AutoMapper
-        private IMapper ConfigureAutoMapper()
+        private static IMapper ConfigureAutoMapper()
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -46,7 +46,7 @@ namespace TRMDesktopUI
             return output;
         }
 
-        private IConfiguration AddConfiguration()
+        private static IConfiguration AddConfiguration()
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
