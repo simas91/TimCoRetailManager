@@ -46,6 +46,7 @@ namespace TRMDesktopUI.ViewModels
                 SelectedUserName = value.Email;
                 UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
                 // TODO Fix later
+                // Can't do LoadRoles().Wait() in a get/set 
                 LoadRoles();
                 NotifyOfPropertyChange(() => SelectedUser);
             }
